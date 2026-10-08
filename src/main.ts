@@ -9,7 +9,7 @@ const retry=document.querySelector<HTMLButtonElement>('#retry')!;
 const scene=new THREE.Scene();scene.background=new THREE.Color('#10141a');scene.fog=new THREE.Fog('#10141a',9,22);
 const camera=new THREE.PerspectiveCamera(32,1,.05,30);camera.position.set(0,1.0,4.3);
 let renderer:THREE.WebGLRenderer;
-try {renderer=new THREE.WebGLRenderer({antialias:true,alpha:false});}catch{status.textContent='Safari не смог запустить 3D. Закройте лишние вкладки и откройте игру снова.';throw Error('WebGL unavailable');}
+try {renderer=new THREE.WebGLRenderer({antialias:true,alpha:false});}catch{status.textContent='На этом устройстве недоступен WebGL. Откройте игру в Safari на iPhone. Если ошибка сохраняется, закройте лишние вкладки и повторите.';retry.hidden=false;retry.textContent='Перезагрузить';retry.onclick=()=>location.reload();throw Error('WebGL unavailable');}
 renderer.setPixelRatio(Math.min(devicePixelRatio,1.5));renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.1;
 stage.prepend(renderer.domElement);
 const pmrem=new THREE.PMREMGenerator(renderer);scene.environment=pmrem.fromScene(new RoomEnvironment(),.04).texture;pmrem.dispose();
