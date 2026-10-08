@@ -1,0 +1,13 @@
+import assert from 'node:assert/strict';
+import {initial,purchase,upgrade,sale,persist,readSave} from '../src/game.ts';
+const memory=new Map();globalThis.localStorage={getItem:k=>memory.get(k)||null,setItem:(k,v)=>memory.set(k,v)};
+const s=initial();assert.equal(purchase(s,'female_casualsuit01'),true);assert.equal(s.money,750);
+assert.equal(purchase(s,'female_casualsuit01'),false);assert.equal(s.money,750);
+assert.equal(purchase(s,'unknown'),false);assert.equal(upgrade(s),false);
+const result=sale(s);assert.equal(result.profit,result.revenue-result.cost);assert.equal(s.money,788);assert.equal(s.sales,1);
+s.money=900;assert.equal(upgrade(s),true);assert.equal(s.level,1);assert.equal(s.money,0);
+s.look={outfit:'female_casualsuit01',color:'#331144',roughness:.2,metalness:.4};s.favorites=[{...s.look}];
+assert.equal(persist(s),true);assert.deepEqual(readSave(),s);
+memory.set('lfe-save-v1','{broken');assert.deepEqual(readSave(),initial());
+memory.set('lfe-save-v1',JSON.stringify({...s,money:-3,level:999,look:{outfit:'evil',color:'<script>'}}));const restored=readSave();assert.equal(restored.money,1200);assert.equal(restored.level,8);assert.equal(restored.look.outfit,'female_elegantsuit01');
+console.log('Economy checks passed: purchase, duplicate/invalid purchase, insufficient funds, profit, upgrade, save round-trip, corrupt save recovery.');

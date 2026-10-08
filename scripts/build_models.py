@@ -92,3 +92,5 @@ def build(outfit='female_elegantsuit01',persona='elena'):
     bpy.ops.export_scene.gltf(filepath=os.path.join(OUT,f'{persona}-{outfit}.glb'),export_format='GLB',export_animations=True,export_animation_mode='NLA_TRACKS',export_yup=True,export_morph=True,export_tangents=True)
     print('MODEL_READY',persona,outfit,flush=True)
 build()
+build('female_casualsuit01')
+build('female_casualsuit02')
