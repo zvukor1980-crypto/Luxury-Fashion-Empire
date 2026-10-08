@@ -1,7 +1,7 @@
 # Run with Blender 4.5 --background --python scripts/build_models.py -- <mpfb-source> <system-assets>
 # Uses only CC0 MakeHuman assets; MPFB tool itself is GPL and is not shipped in the game.
 import bpy, sys, os, math
-from mathutils import Vector
+from mathutils import Vector, Quaternion
 args=sys.argv[sys.argv.index('--')+1:]
 sys.path.insert(0, os.path.join(args[0],'src'))
 import mpfb
@@ -60,7 +60,10 @@ def build(outfit='female_elegantsuit01',persona='elena'):
             for b in pb:
                 b.rotation_mode='XYZ';b.rotation_euler=(0,0,0);b.location=(0,0,0)
             # Arms rest beside the torso, rather than in the asset's A-pose.
-            pb['upperarm_l'].rotation_euler.z=0.30;pb['upperarm_r'].rotation_euler.z=-0.30
+            for side,sign in [('l',1),('r',-1)]:
+                b=pb['upperarm_'+side]
+                axis=b.bone.matrix_local.to_quaternion().inverted() @ Vector((0,1,0))
+                b.rotation_euler=Quaternion(axis,sign*0.65).to_euler('XYZ')
             pose(t,pb)
             for b in pb:b.keyframe_insert('rotation_euler',frame=f)
         tr=rig.animation_data.nla_tracks.new();tr.name=name;tr.strips.new(name,1,act);rig.animation_data.action=None
@@ -74,15 +77,18 @@ def build(outfit='female_elegantsuit01',persona='elena'):
         p['spine_02'].rotation_euler.y=0.025*math.sin(t)
     def pose(t,p):
         p['spine_02'].rotation_euler.y=0.09*math.sin(t);p['head'].rotation_euler.y=-0.10*math.sin(t)
-        p['lowerarm_l'].rotation_euler.x=0.35;p['upperarm_l'].rotation_euler.z=0.55
+        p['lowerarm_l'].rotation_euler.x=0.18
     def dance(t,p):
         walk(t,p);p['spine_02'].rotation_euler.z=0.10*math.sin(t)
-        p['upperarm_l'].rotation_euler.z=0.75+0.15*math.sin(t);p['upperarm_r'].rotation_euler.z=-0.75+0.15*math.sin(t)
+        p['upperarm_l'].rotation_euler.x+=0.22*math.sin(t);p['upperarm_r'].rotation_euler.x-=0.22*math.sin(t)
     animation('Idle',121,idle);animation('Walk',49,walk);animation('Pose',121,pose);animation('Dance',73,dance)
+    for tr in rig.animation_data.nla_tracks:tr.mute=tr.name!='Idle'
     bpy.context.scene.frame_set(1)
+    bpy.ops.wm.save_as_mainfile(filepath='/tmp/lfe-character.blend')
+    for tr in rig.animation_data.nla_tracks:tr.mute=False
     for img in bpy.data.images:
         w,h=img.size
         if max(w,h)>1024:img.scale(int(w*1024/max(w,h)),int(h*1024/max(w,h)))
-    bpy.ops.export_scene.gltf(filepath=os.path.join(OUT,f'{persona}-{outfit}.glb'),export_format='GLB',export_animations=True,export_animation_mode='NLA_TRACKS',export_yup=True,export_morph=True)
+    bpy.ops.export_scene.gltf(filepath=os.path.join(OUT,f'{persona}-{outfit}.glb'),export_format='GLB',export_animations=True,export_animation_mode='NLA_TRACKS',export_yup=True,export_morph=True,export_tangents=True)
     print('MODEL_READY',persona,outfit,flush=True)
 build()
