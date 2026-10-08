@@ -4,7 +4,7 @@ export const outfits=[
  {id:'female_casualsuit02',name:'Современный силуэт',description:'Футболка и короткие шорты',price:750}
 ];
 export const stages=[['Студия',0],['Первый бутик',900],['Фотостудия',2200],['Дом моды',5000],['Большой магазин',10000],['Фабрика',21000],['Сеть бутиков',45000],['Штаб-квартира',90000],['Мировая империя',180000]] as const;
-export type Look={outfit:string;color:string;roughness:number;metalness:number};
+export type Look={outfit:string;color:string;roughness:number;metalness:number;persona?:string;height?:number;waist?:number;hips?:number;bust?:number};
 export type Save={version:1;money:number;owned:string[];look:Look;level:number;staff:number;sales:number;shows:number;earned:number;daily:string;favorites:Look[]};
 export const initial=():Save=>({version:1,money:1200,owned:[outfits[0].id],look:{outfit:outfits[0].id,color:'#44182b',roughness:.36,metalness:.08},level:0,staff:0,sales:0,shows:0,earned:0,daily:'',favorites:[]});
 const key='lfe-save-v1';
@@ -12,7 +12,7 @@ export function readSave():Save{try{const j=JSON.parse(localStorage.getItem(key)
  for(const k of ['money','staff','sales','shows','earned'] as const)if(Number.isFinite(j[k])&&j[k]>=0)s[k]=Math.min(j[k],1e9);
  s.level=Number.isInteger(j.level)?Math.max(0,Math.min(stages.length-1,j.level)):0;
  s.owned=outfits.filter(o=>o.price===0||j.owned?.includes(o.id)).map(o=>o.id);
- const valid=(l:Look)=>l&&s.owned.includes(l.outfit)&&/^#[0-9a-f]{6}$/i.test(l.color)&&Number.isFinite(l.roughness)&&l.roughness>=.08&&l.roughness<=1&&Number.isFinite(l.metalness)&&l.metalness>=0&&l.metalness<=1;
+ const valid=(l:Look)=>l&&s.owned.includes(l.outfit)&&/^#[0-9a-f]{6}$/i.test(l.color)&&Number.isFinite(l.roughness)&&l.roughness>=.08&&l.roughness<=1&&Number.isFinite(l.metalness)&&l.metalness>=0&&l.metalness<=1&&(l.persona===undefined||['elena','maya'].includes(l.persona))&&(l.height===undefined||Number.isFinite(l.height)&&l.height>=.9&&l.height<=1.1)&&['waist','hips','bust'].every(k=>{const value=l[k as 'waist'|'hips'|'bust'];return value===undefined||Number.isFinite(value)&&value>=0&&value<=1;});
  if(valid(j.look))s.look=j.look;if(Array.isArray(j.favorites))s.favorites=j.favorites.filter(valid).slice(0,6);s.daily=typeof j.daily==='string'?j.daily:'';return s;
  }catch{return initial();}}
 export function persist(s:Save){try{localStorage.setItem(key,JSON.stringify(s));return true;}catch{return false;}}

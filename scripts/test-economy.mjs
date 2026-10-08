@@ -11,3 +11,7 @@ assert.equal(persist(s),true);assert.deepEqual(readSave(),s);
 memory.set('lfe-save-v1','{broken');assert.deepEqual(readSave(),initial());
 memory.set('lfe-save-v1',JSON.stringify({...s,money:-3,level:999,look:{outfit:'evil',color:'<script>'}}));const restored=readSave();assert.equal(restored.money,1200);assert.equal(restored.level,8);assert.equal(restored.look.outfit,'female_elegantsuit01');
 console.log('Economy checks passed: purchase, duplicate/invalid purchase, insufficient funds, profit, upgrade, save round-trip, corrupt save recovery.');
+
+s.look={...s.look,persona:'maya',height:1.06,waist:.4,hips:.5,bust:.6};persist(s);assert.deepEqual(readSave().look,s.look);
+memory.set('lfe-save-v1',JSON.stringify({...s,look:{...s.look,persona:'../../invalid',height:NaN}}));assert.equal(readSave().look.outfit,'female_elegantsuit01');
+console.log('Character settings: round-trip and invalid values verified.');

@@ -27,7 +27,8 @@ def build(outfit='female_elegantsuit01',persona='elena'):
     H.set_character_skin(os.path.join(ASSETS,'skins/young_caucasian_female2/young_caucasian_female2.mhmat') if persona=='elena' else os.path.join(ASSETS,'skins/young_asian_female/young_asian_female.mhmat'),body,skin_type='GAMEENGINE')
     add(body,'eyes/high-poly/high-poly.mhclo','Eyes')
     add(body,'eyebrows/eyebrow001/eyebrow001.mhclo','Eyebrows')
-    add(body,'hair/long01/long01.mhclo' if persona=='elena' else 'hair/bob01/bob01.mhclo','Hair')
+    add(body,'hair/long01/long01.mhclo' if persona=='elena' else 'hair/bob02/bob02.mhclo','Hair')
+    if persona=='maya':add(body,'eyelashes/eyelashes01/eyelashes01.mhclo','Eyelashes')
     garment=add(body,f'clothes/{outfit}/{outfit}.mhclo'); garment.name='Garment'
     shoe=add(body,'clothes/shoes03/shoes03.mhclo'); shoe.name='Shoes'
     # Bake the phenotype, then apply occlusion masks to prevent body intersections.
@@ -91,6 +92,5 @@ def build(outfit='female_elegantsuit01',persona='elena'):
         if max(w,h)>1024:img.scale(int(w*1024/max(w,h)),int(h*1024/max(w,h)))
     bpy.ops.export_scene.gltf(filepath=os.path.join(OUT,f'{persona}-{outfit}.glb'),export_format='GLB',export_animations=True,export_animation_mode='NLA_TRACKS',export_yup=True,export_morph=True,export_tangents=True)
     print('MODEL_READY',persona,outfit,flush=True)
-build()
-build('female_casualsuit01')
-build('female_casualsuit02')
+persona='maya' if 'maya' in args[2:] else 'elena'
+for outfit in ['female_elegantsuit01','female_casualsuit01','female_casualsuit02']:build(outfit,persona)

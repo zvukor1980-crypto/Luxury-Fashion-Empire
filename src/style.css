@@ -2,3 +2,5 @@
 
 /* Keep the title clear of the character on small screens. */
 @media(max-width:849px){.caption{top:12px;right:16px;text-align:center}.caption h1{font-size:18px;margin:4px 0}.caption h1 br{display:none}.caption p{display:none}.caption small{font-size:8px}#stage{height:68dvh}}
+
+.photo-dialog{background:#191e25;color:#eee6db;border:1px solid #b99762;border-radius:18px;width:min(92vw,520px);max-height:90dvh}.photo-dialog::backdrop{background:#000b}.photo-dialog img{display:block;max-width:100%;max-height:65dvh;margin:auto}.photo-dialog a{color:#e8c78c;padding:12px;border:1px solid #70624a;border-radius:12px}
