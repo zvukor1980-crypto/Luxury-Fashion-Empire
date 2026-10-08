@@ -7,7 +7,7 @@
     "build": "npm run verify:assets && tsc --noEmit && vite build",
     "preview": "vite preview --host 0.0.0.0",
     "verify:assets": "node scripts/verify-assets.mjs",
-    "test": "node scripts/test-economy.mjs && node scripts/test-ui.mjs"
+    "test": "node scripts/test-economy.mjs && node scripts/test-ui.mjs && node scripts/test-figure.mjs"
   },
   "dependencies": {
     "three": "^0.180.0"

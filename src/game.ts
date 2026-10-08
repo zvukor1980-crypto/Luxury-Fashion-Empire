@@ -12,7 +12,7 @@ export function readSave():Save{try{const j=JSON.parse(localStorage.getItem(key)
  for(const k of ['money','staff','sales','shows','earned'] as const)if(Number.isFinite(j[k])&&j[k]>=0)s[k]=Math.min(j[k],1e9);
  s.level=Number.isInteger(j.level)?Math.max(0,Math.min(stages.length-1,j.level)):0;
  s.owned=outfits.filter(o=>o.price===0||j.owned?.includes(o.id)).map(o=>o.id);
- const valid=(l:Look)=>l&&s.owned.includes(l.outfit)&&/^#[0-9a-f]{6}$/i.test(l.color)&&Number.isFinite(l.roughness)&&l.roughness>=.08&&l.roughness<=1&&Number.isFinite(l.metalness)&&l.metalness>=0&&l.metalness<=1&&(l.persona===undefined||['elena','maya'].includes(l.persona))&&(l.height===undefined||Number.isFinite(l.height)&&l.height>=.9&&l.height<=1.1)&&['waist','hips','bust'].every(k=>{const value=l[k as 'waist'|'hips'|'bust'];return value===undefined||Number.isFinite(value)&&value>=0&&value<=1;});
+ const valid=(l:Look)=>l&&s.owned.includes(l.outfit)&&/^#[0-9a-f]{6}$/i.test(l.color)&&Number.isFinite(l.roughness)&&l.roughness>=.08&&l.roughness<=1&&Number.isFinite(l.metalness)&&l.metalness>=0&&l.metalness<=1&&(l.persona===undefined||['elena','maya'].includes(l.persona))&&(l.height===undefined||Number.isFinite(l.height)&&l.height>=.9&&l.height<=1.1)&&['waist','hips','bust'].every(k=>{const value=l[k as 'waist'|'hips'|'bust'];return value===undefined||Number.isFinite(value)&&value>=(k==='waist'?-1:0)&&value<=(k==='waist'?1:2);});
  if(valid(j.look))s.look=j.look;if(Array.isArray(j.favorites))s.favorites=j.favorites.filter(valid).slice(0,6);s.daily=typeof j.daily==='string'?j.daily:'';return s;
  }catch{return initial();}}
 export function persist(s:Save){try{localStorage.setItem(key,JSON.stringify(s));return true;}catch{return false;}}
