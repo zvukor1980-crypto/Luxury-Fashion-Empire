@@ -16,27 +16,28 @@ const scene=new THREE.Scene();scene.background=new THREE.Color('#10141a');scene.
 const camera=new THREE.PerspectiveCamera(32,1,.05,30);camera.position.set(0,1.0,4.3);
 let renderer:THREE.WebGLRenderer;
 try {renderer=new THREE.WebGLRenderer({antialias:true,alpha:false,powerPreference:"low-power"});}catch{status.textContent='На этом устройстве недоступен WebGL. Откройте игру в Safari на iPhone. Если ошибка сохраняется, закройте лишние вкладки и повторите.';retry.hidden=false;retry.textContent='Перезагрузить';retry.onclick=()=>location.reload();document.querySelector<HTMLButtonElement>('#quality')!.disabled=true;mountGame(async()=>false,async()=>false,async()=>null,()=>{},()=>false,()=>false);throw Error('WebGL unavailable');}
-renderer.setPixelRatio(Math.min(devicePixelRatio,1.25));renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=.9;
+renderer.setPixelRatio(Math.min(devicePixelRatio,1.25));renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.0;renderer.shadowMap.type=THREE.PCFSoftShadowMap;
 stage.prepend(renderer.domElement);
 const pmrem=new THREE.PMREMGenerator(renderer);scene.environment=pmrem.fromScene(new RoomEnvironment(),.04).texture;pmrem.dispose();
 const controls=new OrbitControls(camera,renderer.domElement);controls.target.set(0,.9,0);controls.enablePan=false;controls.enableDamping=true;controls.minDistance=1.6;controls.maxDistance=6;controls.maxPolarAngle=Math.PI*.49;
 scene.add(new THREE.HemisphereLight(0xffebd4,0x383c57,.7));
-const key=new THREE.DirectionalLight(0xfff1de,1.8);key.position.set(3,4,3);scene.add(key);
+const key=new THREE.DirectionalLight(0xfff1de,1.8);key.position.set(3,4,3);key.castShadow=true;key.shadow.mapSize.set(1024,1024);key.shadow.camera.left=-3;key.shadow.camera.right=3;key.shadow.camera.top=4;key.shadow.camera.bottom=-2;key.shadow.camera.near=.5;key.shadow.camera.far=12;key.shadow.normalBias=.025;scene.add(key);
 const rim=new THREE.DirectionalLight(0xb4caff,1.0);rim.position.set(-2,3,-3);scene.add(rim);
 const interiors=createInteriors(scene);let selectedLocation='studio';
 let model:THREE.Group|undefined,mixer:THREE.AnimationMixer|undefined;let actions:Record<string,THREE.AnimationAction>={};let current:THREE.AnimationAction|undefined;let loading=false;let loadedOutfit='';let baseScale=1,baseY=0;let activeLook:Look={outfit:'female_elegantsuit01',color:'#44182b',roughness:.36,metalness:.08};
 function fabric(look:Look){if(model)applyFigure(model,look,baseScale,baseY);model?.traverse(o=>{if(!(o instanceof THREE.Mesh))return;for(const m of Array.isArray(o.material)?o.material:[o.material])if(m instanceof THREE.MeshStandardMaterial&&/female_(elegant|casual)suit/.test(m.name)){m.map=null;m.color.set(look.color);m.roughness=look.roughness;m.metalness=look.metalness;m.needsUpdate=true;}});}
 function animate(name:string){if(!actions[name])return;current?.fadeOut(.3);current=actions[name];current.reset().fadeIn(.3).play();}
 async function load(outfit=activeLook.outfit):Promise<boolean>{if(loading)return false;loading=true;retry.hidden=true;status.hidden=false;status.textContent='Загрузка персонажа…';
+ let parseTimer:ReturnType<typeof setTimeout>|undefined;
  const abort=new AbortController();const timer=setTimeout(()=>abort.abort(),25000);
  try{const res=await fetch(import.meta.env.BASE_URL+'assets/'+(activeLook.persona??'elena')+'-'+outfit+'.glb',{signal:abort.signal});if(!res.ok)throw Error('Файл персонажа: HTTP '+res.status);const buffer=await res.arrayBuffer();
- const gltf=await Promise.race([new GLTFLoader().parseAsync(buffer,import.meta.env.BASE_URL+'assets/'),new Promise<never>((_,reject)=>setTimeout(()=>reject(Error('Обработка 3D-модели заняла слишком долго')),15000))]);
+ const gltf=await Promise.race([new GLTFLoader().parseAsync(buffer,import.meta.env.BASE_URL+'assets/'),new Promise<never>((_,reject)=>parseTimer=setTimeout(()=>reject(Error('Обработка 3D-модели заняла слишком долго')),15000))]);
  if(!gltf.scene||!gltf.animations.length)throw Error('В файле нет персонажа или анимаций');
  const previous=model;const previousMixer=mixer;
  model=gltf.scene;
  // MPFB exports all materials as BLEND. Opaque skin/eyes/clothes must write depth:
  // otherwise transparent sorting exposes legs through skirts and eyeballs through skin.
- model.traverse(object=>{if(!(object instanceof THREE.Mesh))return;
+ model.traverse(object=>{if(!(object instanceof THREE.Mesh))return;object.castShadow=true;object.receiveShadow=true;
   for(const material of Array.isArray(object.material)?object.material:[object.material]){
    if(!(material instanceof THREE.MeshStandardMaterial))continue;
    const cutout=/long01|bob02|eyebrow|eyelashes/i.test(material.name);
@@ -50,9 +51,9 @@ async function load(outfit=activeLook.outfit):Promise<boolean>{if(loading)return
  model.updateMatrixWorld(true);const bounds=new THREE.Box3().setFromObject(model);const size=bounds.getSize(new THREE.Vector3());const scale=1.75/size.y;model.scale.setScalar(scale);baseScale=scale;baseY=-bounds.min.y*scale;model.position.y=baseY;fabric(activeLook);
  mixer=new THREE.AnimationMixer(model);actions={};for(const clip of gltf.animations)actions[clip.name]=mixer.clipAction(clip);animate('Idle');
  renderer.render(scene,camera);status.hidden=true;document.body.dataset.model='ready';document.querySelector('#hint')!.textContent='Персонаж загружен. Поверните пальцем, приблизьте двумя пальцами.';return true;
- }catch(e){status.textContent=e instanceof Error?e.message:'Не удалось загрузить модель';if(abort.signal.aborted)status.textContent='Загрузка превысила 25 секунд. Проверьте интернет и нажмите «Повторить».';retry.hidden=false;document.body.dataset.model='error';return false;}finally{clearTimeout(timer);loading=false;animationButtons.forEach(b=>b.disabled=!model);game.refresh();}}
+ }catch(e){status.textContent=e instanceof Error?e.message:'Не удалось загрузить модель';if(abort.signal.aborted)status.textContent='Загрузка превысила 25 секунд. Проверьте интернет и нажмите «Повторить».';retry.hidden=false;document.body.dataset.model='error';return false;}finally{clearTimeout(timer);clearTimeout(parseTimer);loading=false;animationButtons.forEach(b=>b.disabled=!model);game.refresh();}}
 retry.onclick=()=>void load();document.querySelectorAll<HTMLButtonElement>('[data-anim]').forEach(b=>b.onclick=()=>animate(b.dataset.anim!));
-let high=false;document.querySelector<HTMLButtonElement>('#quality')!.onclick=()=>{high=!high;renderer.setPixelRatio(Math.min(devicePixelRatio,high?1.75:1.25));document.querySelector('#quality')!.textContent='Качество: '+(high?'высокое':'экономное');resize();};
+let high=false;document.querySelector<HTMLButtonElement>('#quality')!.onclick=()=>{high=!high;renderer.shadowMap.enabled=high;renderer.setPixelRatio(Math.min(devicePixelRatio,high?1.75:1.25));document.querySelector('#quality')!.textContent='Качество: '+(high?'высокое':'экономное');resize();};
 function resize(){const w=stage.clientWidth,h=stage.clientHeight;renderer.setSize(w,h);camera.aspect=w/h;camera.updateProjectionMatrix();}new ResizeObserver(resize).observe(stage);resize();
 renderer.domElement.addEventListener('webglcontextlost',e=>{e.preventDefault();status.hidden=false;status.textContent='Safari приостановил 3D. Перезагрузите страницу.';animationButtons.forEach(b=>b.disabled=true);showTime=-1;showResolve?.(false);showResolve=undefined;retry.hidden=false;retry.textContent='Перезагрузить';retry.onclick=()=>location.reload();});
 let showTime=-1,showResolve:((success:boolean)=>void)|undefined;
