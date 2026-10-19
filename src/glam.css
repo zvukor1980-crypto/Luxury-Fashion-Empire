@@ -1,0 +1,61 @@
+/* Luxury 2.0 — сказочная розово-золотая тема */
+:root{--rose:#ff5fa2;--rose2:#ff9ccc;--gold:#ffd36b;--gold2:#e8a93a;--plum:#2a1450;--ink:#2b1238;color:#fff6fb}
+html body{background:radial-gradient(120% 70% at 50% 0%,#ffb3d6 0%,#c05ba8 34%,#4a1f7a 70%,#1c0c3a 100%) fixed;color:#fff6fb}
+html body header{background:linear-gradient(180deg,rgba(255,255,255,.28),rgba(255,255,255,.06));backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid rgba(255,230,160,.55);box-shadow:0 6px 24px rgba(80,0,60,.25)}
+html body header span{font-weight:700;letter-spacing:4px;background:linear-gradient(180deg,#fff7d6,#ffd36b 45%,#e39a2a 55%,#fff1b8);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 2px 2px rgba(120,30,60,.5))}
+html body header small{-webkit-text-fill-color:#fff;color:#fff;opacity:.85}
+html body button{background:linear-gradient(180deg,rgba(255,255,255,.34),rgba(255,255,255,.1)),linear-gradient(135deg,#8a3fc7,#c2185b);color:#fff;border:1px solid rgba(255,235,190,.6);border-radius:16px;box-shadow:0 4px 0 rgba(70,10,60,.45),0 8px 18px rgba(80,0,70,.3),inset 0 1px 0 rgba(255,255,255,.6);font-weight:700;text-shadow:0 1px 1px rgba(60,0,40,.45);transition:transform .12s}
+html body button:active{transform:translateY(2px);box-shadow:0 2px 0 rgba(70,10,60,.45)}
+html body button.active,html body button.gold{background:linear-gradient(180deg,#fff6c9,#ffd36b 45%,#f0a22e 55%,#ffcf5c);color:#5a2a00;text-shadow:0 1px 0 rgba(255,255,255,.6);border-color:#fff1b8}
+html body #stage{background:transparent}
+html body .caption small{color:#fff;text-shadow:0 1px 3px rgba(120,0,80,.6)}
+html body h1{background:linear-gradient(180deg,#fff,#ffe7a3);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 2px 3px rgba(120,0,80,.55));font-weight:700}
+html body .controls{background:rgba(255,255,255,.18);padding:6px;border-radius:20px;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.4)}
+html body aside{background:linear-gradient(180deg,rgba(255,255,255,.16),rgba(255,255,255,.04)),linear-gradient(180deg,#5b2486,#2a1050);border-top:1px solid rgba(255,220,150,.6);border-radius:26px 26px 0 0;margin-top:-22px;position:relative;z-index:3;box-shadow:0 -10px 30px rgba(60,0,60,.35)}
+html body aside h2{font-weight:700;background:linear-gradient(180deg,#fff,#ffd36b);-webkit-background-clip:text;background-clip:text;color:transparent}
+html body p{color:#f3dcef}
+html body .hero{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:6px}
+html body .balance{font-size:28px;font-weight:800;color:#fff3c2;text-shadow:0 2px 0 #a05a00,0 0 18px rgba(255,210,100,.6);display:flex;align-items:center;gap:8px}
+html body .balance::before{content:'';width:26px;height:26px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fffbe0,#ffd36b 40%,#d08a14 75%);box-shadow:0 0 12px rgba(255,210,90,.8),inset 0 -2px 0 #a86300}
+.fame-badge{font-size:12px;font-weight:800;padding:6px 12px;border-radius:999px;background:linear-gradient(135deg,#ff5fa2,#b28dff);box-shadow:0 0 14px rgba(255,120,200,.6);white-space:nowrap}
+.trend-chip{display:flex;align-items:center;gap:8px;font-size:12.5px;padding:8px 12px;border-radius:14px;background:rgba(255,255,255,.12);border:1px dashed rgba(255,230,170,.6);margin:4px 0 6px}
+.trend-chip i{width:16px;height:16px;border-radius:50%;flex:none;box-shadow:0 0 0 2px #fff,0 0 10px rgba(255,255,255,.6)}
+.trend-chip.ok{background:linear-gradient(135deg,rgba(255,211,107,.35),rgba(255,95,162,.35));border-style:solid;animation:glowp 1.6s ease-in-out infinite}
+@keyframes glowp{50%{box-shadow:0 0 18px rgba(255,211,107,.7)}}
+html body nav{padding:4px 2px 8px;scrollbar-width:none}
+html body nav button{border-radius:999px;padding:10px 16px}
+html body .card{background:linear-gradient(160deg,rgba(255,255,255,.24),rgba(255,255,255,.07));border:1px solid rgba(255,225,170,.45);border-radius:22px;box-shadow:0 10px 24px rgba(40,0,50,.25),inset 0 1px 0 rgba(255,255,255,.4);position:relative;overflow:hidden}
+html body .card::after{content:'';position:absolute;inset:-40% -60% auto auto;width:140px;height:140px;background:radial-gradient(circle,rgba(255,255,255,.35),transparent 65%);pointer-events:none}
+html body .card b{color:#ffe59a;font-size:16.5px;text-shadow:0 1px 2px rgba(80,0,40,.4)}
+.card.vip small{display:block;font-size:10px;letter-spacing:2px;color:#ffd1ea;font-weight:800}
+.card.vip b{font-size:20px!important}
+.checks{list-style:none;padding:0;margin:8px 0;display:grid;gap:6px}
+.checks li{padding:8px 10px;border-radius:12px;background:rgba(0,0,0,.18);font-size:14px}
+.checks li.ok{background:linear-gradient(90deg,rgba(125,255,158,.35),rgba(125,255,158,.08));color:#eaffef}
+.swatches{display:grid;grid-template-columns:repeat(9,1fr);gap:6px;margin:14px 0 4px}
+html body .swatch{min-height:0;aspect-ratio:1;padding:0;border-radius:50%;background:radial-gradient(circle at 32% 28%,rgba(255,255,255,.75),transparent 40%),var(--c);border:2px solid rgba(255,255,255,.75);box-shadow:0 3px 8px rgba(0,0,0,.3)}
+html body .swatch.on{outline:3px solid #ffd36b;outline-offset:2px;transform:scale(1.08)}
+html body progress{height:12px;border-radius:999px;overflow:hidden;appearance:none;-webkit-appearance:none;background:rgba(0,0,0,.25);border:0}
+progress::-webkit-progress-bar{background:rgba(0,0,0,.25);border-radius:999px}
+progress::-webkit-progress-value{background:linear-gradient(90deg,#ff5fa2,#ffd36b);border-radius:999px}
+html body #toast{background:linear-gradient(135deg,#ff5fa2,#8a3fc7);border:1px solid #ffe7a3;font-weight:700;box-shadow:0 10px 30px rgba(80,0,60,.4)}
+html body #loading{background:linear-gradient(135deg,rgba(138,63,199,.9),rgba(194,24,91,.9));border-color:#ffd36b;color:#fff;font-weight:700}
+.lux-pop{position:fixed;inset:0;z-index:50;display:grid;place-items:center;background:radial-gradient(circle,rgba(60,0,60,.35),rgba(20,0,30,.75));animation:fadein .25s}
+.lux-card{position:relative;overflow:hidden;width:min(86vw,360px);text-align:center;padding:26px 20px 20px;border-radius:28px;background:linear-gradient(180deg,#fff4fb,#ffd6ea 60%,#f7b2d5);color:#5a1240;border:3px solid #ffd36b;box-shadow:0 0 0 4px rgba(255,255,255,.5),0 20px 60px rgba(60,0,60,.5);animation:popin .45s cubic-bezier(.2,1.6,.4,1)}
+.lux-rays{position:absolute;inset:-60%;background:repeating-conic-gradient(rgba(255,211,107,.28) 0 10deg,transparent 10deg 22deg);animation:spin 14s linear infinite;pointer-events:none}
+.lux-card>*:not(.lux-rays){position:relative}
+.lux-card h3{margin:4px 0;font-size:24px;color:#a0125a}
+.lux-card p{color:#7a2a5c;margin:4px 0 10px}
+.lux-stars{font-size:38px;color:#ffc23a;text-shadow:0 2px 0 #b56d00,0 0 14px rgba(255,200,60,.8);letter-spacing:2px}
+.lux-stars span{color:rgba(160,80,120,.3);text-shadow:none}
+.lux-reward{font-size:34px;font-weight:900;color:#fff;text-shadow:0 3px 0 #c2185b,0 0 20px rgba(255,120,190,.9)}
+.lux-fame{font-weight:800;color:#8a3fc7;margin:4px 0 12px}
+.lux-card button{width:100%;margin-top:6px}
+@keyframes popin{from{transform:scale(.5);opacity:0}}@keyframes fadein{from{opacity:0}}@keyframes spin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.lux-rays,.trend-chip.ok{animation:none}}
+html body .caption{background:none!important;border:0!important}
+html body .caption h1{font-size:22px}
+html body .hero{padding-right:44px}
+html body #stage{border:0}
+html body .controls button{background:linear-gradient(180deg,rgba(255,255,255,.35),rgba(255,255,255,.08)),linear-gradient(135deg,#ff5fa2,#8a3fc7);border-color:rgba(255,240,200,.7)}
+html body .controls button:disabled{opacity:.55}
