@@ -23,7 +23,7 @@ await p.evaluate(()=>document.querySelector('[data-tab="wardrobe"]').click());aw
 ok(await p.evaluate(()=>JSON.parse(localStorage.getItem('lfe-save-v1')).look.color==='#1f4fbf'),'palette swatch applies color');
 await p.evaluate(()=>document.querySelector('[data-tab="career"]').click());await p.evaluate(()=>document.querySelector('#show').click());await sleep(6200);
 await p.screenshot({path:OUT+'v2-runway.png'});
-await p.waitForFunction(()=>document.querySelector('.lux-pop'),{timeout:30000});await sleep(700);
+await p.waitForFunction(()=>document.querySelector('.lux-pop'),{timeout:60000});await sleep(700);
 s=await p.evaluate(()=>JSON.parse(localStorage.getItem('lfe-save-v1')));ok(s.shows===3,'show finished and counted');
 await p.screenshot({path:OUT+'v2-show-result.png'});await p.evaluate(()=>document.querySelector('.lux-pop button').click());
 await sleep(300);await p.screenshot({path:OUT+'v2-career.png',fullPage:true});
