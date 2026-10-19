@@ -4,10 +4,11 @@ import path from 'node:path';
 import ts from 'typescript';
 import * as THREE from 'three';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
+import {MeshoptDecoder} from 'three/addons/libs/meshopt_decoder.module.js';
 const dir=path.resolve('node_modules/.cache/lfe-figure-test');await fs.mkdir(dir,{recursive:true});
 const code=ts.transpileModule(await fs.readFile('src/figure.ts','utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.ESNext}}).outputText;await fs.writeFile(dir+'/figure.mjs',code);
 const {applyFigure}=await import('file://'+dir+'/figure.mjs');
-const loader=new GLTFLoader();loader.register(()=>({name:'CPUTextureStub',loadTexture:()=>Promise.resolve(new THREE.Texture())}));
+const loader=new GLTFLoader();loader.setMeshoptDecoder(MeshoptDecoder);await MeshoptDecoder.ready;loader.register(()=>({name:'CPUTextureStub',loadTexture:()=>Promise.resolve(new THREE.Texture())}));loader.pluginCallbacks.unshift(loader.pluginCallbacks.pop());
 for(const file of (await fs.readdir('public/assets')).filter(f=>f.endsWith('.glb'))){
  const b=await fs.readFile('public/assets/'+file);const gltf=await loader.parseAsync(b.buffer.slice(b.byteOffset,b.byteOffset+b.byteLength),'');
  const model=gltf.scene,mixer=new THREE.AnimationMixer(model);mixer.clipAction(gltf.animations.find(a=>a.name==='Idle')).play();mixer.update(.2);model.updateMatrixWorld(true);

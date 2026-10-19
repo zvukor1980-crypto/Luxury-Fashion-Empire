@@ -27,5 +27,22 @@ await p.waitForFunction(()=>document.querySelector('.lux-pop'),{timeout:30000});
 s=await p.evaluate(()=>JSON.parse(localStorage.getItem('lfe-save-v1')));ok(s.shows===3,'show finished and counted');
 await p.screenshot({path:OUT+'v2-show-result.png'});await p.evaluate(()=>document.querySelector('.lux-pop button').click());
 await sleep(300);await p.screenshot({path:OUT+'v2-career.png',fullPage:true});
+// 3.0: аксессуары + Неделя моды + свет
+await p.evaluate(()=>document.querySelector('[data-tab="wardrobe"]').click());
+for(const id of ['tiara','glasses','necklace']){await p.evaluate(id=>document.querySelector(`[data-acc="${id}"]`).click(),id);await sleep(400);}
+s=await p.evaluate(()=>JSON.parse(localStorage.getItem('lfe-save-v1')));ok(s.accOwned.length===3&&s.accWorn.length===3,'3 accessories bought and worn');
+ok(await p.evaluate(()=>__LFE.acc)===3,'3 accessories attached to skeleton');
+await p.evaluate(()=>document.querySelector('[data-tab="locations"]').click());await p.evaluate(()=>document.querySelector('[data-mood="neon"]').click());await sleep(800);
+ok(await p.evaluate(()=>__LFE.glam.moodId==='neon'&&JSON.parse(localStorage.getItem('lfe-save-v1')).mood==='neon'),'neon light mood');
+await p.evaluate(()=>document.querySelector('[data-location="studio"]').click());await sleep(600);
+await p.evaluate(()=>{document.querySelector('[data-tab="appearance"]').click();document.querySelector('[data-view="face"]').click();});await sleep(1200);await p.screenshot({path:OUT+'v3-accessories.png'});
+await p.evaluate(()=>document.querySelector('[data-view="full"]').click());await sleep(500);
+await p.evaluate(()=>document.querySelector('[data-tab="fw"]').click());await sleep(300);await p.screenshot({path:OUT+'v3-fashion-week.png',fullPage:true});
+const fw0=await p.evaluate(()=>JSON.parse(localStorage.getItem('lfe-save-v1')).fwRound);
+await p.evaluate(()=>document.querySelector('#fw-go').click());await p.waitForFunction(()=>document.querySelector('.fwres'),{timeout:40000});await sleep(1800);
+s=await p.evaluate(()=>JSON.parse(localStorage.getItem('lfe-save-v1')));ok(s.fwRound===fw0+1,'fashion week round judged');
+await p.screenshot({path:OUT+'v3-judges.png'});await p.evaluate(()=>document.querySelector('.lux-pop button').click());
+await p.reload({waitUntil:'networkidle0'});await p.waitForFunction(()=>document.body.dataset.model==='ready',{timeout:60000});await sleep(800);
+ok(await p.evaluate(()=>__LFE.acc)===3&&await p.evaluate(()=>__LFE.glam.moodId)==='neon','accessories + mood restored after reload');
 ok(errs.length===0,'no console errors'+(errs.length?': '+errs.slice(0,3).join(' | '):''));
 await b.close();console.log(fails?'FAILED '+fails:'ALL PASSED');process.exit(fails?1:0);})();

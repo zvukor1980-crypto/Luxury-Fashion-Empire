@@ -59,3 +59,32 @@ html body .hero{padding-right:44px}
 html body #stage{border:0}
 html body .controls button{background:linear-gradient(180deg,rgba(255,255,255,.35),rgba(255,255,255,.08)),linear-gradient(135deg,#ff5fa2,#8a3fc7);border-color:rgba(255,240,200,.7)}
 html body .controls button:disabled{opacity:.55}
+/* Luxury 3.0 */
+html body h3.sub{margin:18px 0 6px;font-size:15px;letter-spacing:2px;text-transform:uppercase;color:#ffe59a}
+.acc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:8px}
+html body .acc{display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 6px;min-height:104px;font-size:11.5px;line-height:1.15;text-align:center}
+html body .acc small{font-size:11px;opacity:.9;font-weight:800}
+html body .acc.on{background:linear-gradient(180deg,rgba(255,255,255,.4),rgba(255,255,255,.1)),linear-gradient(135deg,#ff5fa2,#ffb03a);box-shadow:0 0 0 2px #fff3c2,0 0 18px rgba(255,200,90,.7)}
+.ai{width:38px;height:30px;position:relative;display:block;filter:drop-shadow(0 2px 2px rgba(0,0,0,.3))}
+.ai-tiara{background:conic-gradient(from 180deg at 50% 100%,transparent 0 60deg,#ffd36b 60deg 70deg,transparent 70deg 85deg,#ffd36b 85deg 95deg,transparent 95deg 110deg,#ffd36b 110deg 120deg,transparent 120deg);border-bottom:4px solid #ffd36b;border-radius:0 0 8px 8px}
+.ai-tiara::after{content:'';position:absolute;left:15px;top:2px;width:8px;height:8px;background:#ff7ac0;transform:rotate(45deg);box-shadow:0 0 8px #ff2f92}
+.ai-necklace{border:3px dotted #fff6f0;border-top:0;border-radius:0 0 30px 30px;height:22px}
+.ai-necklace::after{content:'';position:absolute;left:14px;bottom:-6px;width:8px;height:8px;border-radius:50%;background:#ff7ac0;box-shadow:0 0 8px #ff2f92}
+.ai-glasses{background:radial-gradient(circle at 25% 55%,#2a0f3a 0 8px,#ffd36b 8px 10px,transparent 10px),radial-gradient(circle at 75% 55%,#2a0f3a 0 8px,#ffd36b 8px 10px,transparent 10px)}
+.ai-clutch{background:linear-gradient(180deg,#fff,#c9b8ff);border-radius:14px 14px 5px 5px;height:22px;margin-top:6px}
+.ai-clutch::after{content:'';position:absolute;left:15px;top:-4px;width:8px;height:8px;border:2px solid #ffd36b;border-radius:50%}
+.ai-earrings{background:radial-gradient(ellipse 5px 7px at 25% 70%,#9fe6ff 0 100%,transparent),radial-gradient(ellipse 5px 7px at 75% 70%,#9fe6ff 0 100%,transparent),radial-gradient(circle at 25% 25%,transparent 3px,#ffd36b 3px 4px,transparent 4px),radial-gradient(circle at 75% 25%,transparent 3px,#ffd36b 3px 4px,transparent 4px)}
+.card.fw small{display:block;font-size:10px;letter-spacing:2px;color:#ffd1ea;font-weight:800}
+.card.fw b{font-size:22px!important}
+.judges{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:10px 0}
+.judge{text-align:center;font-size:11px}.judge i{display:grid;place-items:center;margin:0 auto 4px;width:44px;height:44px;border-radius:50%;font-style:normal;font-weight:900;font-size:20px;color:#fff;background:radial-gradient(circle at 35% 30%,#fff8,transparent 45%),var(--j);box-shadow:0 0 0 3px #fff6,0 0 14px var(--j)}
+.judge span{display:block;font-weight:800}.judge small{opacity:.75}
+.trophies{display:flex;gap:16px;font-size:20px;font-weight:800;color:#fff!important}
+.fwres small{display:block;letter-spacing:2px;font-weight:800;color:#c2185b}
+.scores{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0}
+.score{background:#fff;border-radius:16px;padding:8px 4px;box-shadow:0 6px 14px rgba(120,0,80,.2);animation:flip .6s var(--d) both cubic-bezier(.2,1.5,.4,1)}
+.score i{display:grid;place-items:center;margin:0 auto;width:30px;height:30px;border-radius:50%;background:var(--j);color:#fff;font-style:normal;font-weight:900}
+.score b{display:block;font-size:28px;color:#5a1240}.score span{font-size:10px;color:#7a2a5c}
+@keyframes flip{from{transform:rotateY(90deg) scale(.6);opacity:0}}
+.medal{display:inline-block;padding:8px 16px;border-radius:999px;font-weight:900;margin:4px 0;color:#5a2a00;background:linear-gradient(180deg,#fff6c9,#ffd36b 50%,#f0a22e)}
+.medal.m-silver{background:linear-gradient(180deg,#fff,#d9dfe8 50%,#a9b4c4);color:#2a3442}.medal.m-bronze{background:linear-gradient(180deg,#ffe2c4,#e0975a 50%,#a85f2a);color:#3a1a00}.medal.m-none{background:#eee;color:#666}

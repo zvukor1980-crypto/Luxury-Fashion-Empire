@@ -52,9 +52,13 @@ export function createGlam(scene:THREE.Scene){
  // Вспышки фотографов вдоль подиума
  const flashes:{s:THREE.Sprite;l:THREE.PointLight;t:number}[]=[];
  for(let i=0;i<6;i++){const s=new THREE.Sprite(new THREE.SpriteMaterial({map:spark,color:'#ffffff',transparent:true,opacity:0,blending:THREE.AdditiveBlending,depthWrite:false}));const x=i%2?1.75:-1.75,z=-2.2+Math.floor(i/2)*1.05;s.position.set(x,.95,z);s.scale.set(.9,.9,1);const l=new THREE.PointLight('#ffffff',0,4,2);l.position.copy(s.position);root.add(s,l);flashes.push({s,l,t:0});}
- let room='studio',showing=false,flashTimer=0;
- function select(id:string){room=id;const t=themes[id]??themes.studio;let bg=bgs.get(id);if(!bg){bg=gradient(t);bgs.set(id,bg);}scene.background=bg;if(scene.fog instanceof THREE.Fog){scene.fog.color.set(t.bottom);scene.fog.near=10;scene.fog.far=26;}
-  ringMat.color.set(t.ring);(halo.material as THREE.MeshBasicMaterial).color.set(t.ring);sparkMat.color.set(t.spark);(chandGlow.material as THREE.SpriteMaterial).color.set(t.glow);
+ let room='studio',showing=false,flashTimer=0,moodId='day';
+ const moodDefs:Record<string,{tint:string|null;amt:number;l:string;r:string;li:number}>={day:{tint:null,amt:0,l:'#ffffff',r:'#ffffff',li:0},sunset:{tint:'#ff8a4c',amt:.42,l:'#ff9a5a',r:'#ff5fa2',li:5},neon:{tint:'#7a1cff',amt:.5,l:'#ff2fd0',r:'#22e8ff',li:9},royal:{tint:'#1d2a8a',amt:.48,l:'#ffd36b',r:'#6f8bff',li:6}};
+ const moodL=new THREE.PointLight('#ffffff',0,8,1.4);moodL.position.set(-2.2,1.6,1.2);const moodR=new THREE.PointLight('#ffffff',0,8,1.4);moodR.position.set(2.2,1.9,.8);root.add(moodL,moodR);
+ const mix=(a:string,b:string|null,t:number)=>b?'#'+new THREE.Color(a).lerp(new THREE.Color(b),t).getHexString():a;
+ function mood(id:string){if(!moodDefs[id])return false;moodId=id;bgs.clear();select(room);return true;}
+ function select(id:string){room=id;const md=moodDefs[moodId];const t0=themes[id]??themes.studio;const t={...t0,top:mix(t0.top,md.tint,md.amt*.8),mid:mix(t0.mid,md.tint,md.amt),bottom:mix(t0.bottom,md.tint,md.amt*.6)};let bg=bgs.get(id);if(!bg){bg=gradient(t);bgs.set(id,bg);}moodL.color.set(md.l);moodR.color.set(md.r);moodL.intensity=md.li;moodR.intensity=md.li;if(moodId==='neon')sparkMat.color.set('#ff9ef0');scene.background=bg;if(scene.fog instanceof THREE.Fog){scene.fog.color.set(t.bottom);scene.fog.near=10;scene.fog.far=26;}
+  ringMat.color.set(moodId==='neon'?'#22e8ff':t.ring);(halo.material as THREE.MeshBasicMaterial).color.set(moodId==='neon'?'#ff2fd0':t.ring);if(moodId!=='neon')sparkMat.color.set(t.spark);(chandGlow.material as THREE.SpriteMaterial).color.set(t.glow);
   podium.visible=id!=='runway';chand.visible=id!=='runway'&&id!=='photo';beams.forEach(b=>b.visible=id!=='photo');warm.intensity=id==='runway'?0:3.2;spot.intensity=id==='runway'?20:14;}
  function burst(){for(let i=0;i<C;i++){cpos[i*3]=(Math.random()-.5)*3.2;cpos[i*3+1]=3+Math.random()*1.6;cpos[i*3+2]=-2.4+Math.random()*3;cvel[i*3]=(Math.random()-.5)*.6;cvel[i*3+1]=-.6-Math.random()*.9;cvel[i*3+2]=(Math.random()-.5)*.6;}cg.attributes.position.needsUpdate=true;}
  function update(dt:number,time:number){
@@ -68,5 +72,5 @@ export function createGlam(scene:THREE.Scene){
  }
  function show(on:boolean){showing=on;if(!on)for(const f of flashes)f.t=0;}
  select('studio');
- return {select,update,show,burst,get room(){return room;},root};
+ return {select,update,show,burst,mood,get moodId(){return moodId;},get room(){return room;},root};
 }
